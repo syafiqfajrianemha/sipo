@@ -23,7 +23,6 @@
                                 <tr class="w-full bg-gray-100 border-b">
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">No</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Nomor Dokumen</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Pelaporan</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Permintaan</th>
                                     @if (Auth::user()->role === 'petugas-puskesmas')
@@ -37,7 +36,6 @@
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->input_date }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">{{ $order->document_number }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->report_month }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->request_month }}</td>
                                         @if (Auth::user()->role === 'petugas-puskesmas')
@@ -49,8 +47,8 @@
                                             </x-primary-href>
                                         </td>
                                         @if (Auth::user()->role === 'petugas-farmasi')
-                                            <td class="px-6 py-4 text-sm text-gray-700">
                                                 @if ($order->status === 'verified')
+                                                <td class="px-6 py-4 text-sm text-gray-700">
                                                     <form action="{{ route('order.uploadAttachment', $order->id) }}" method="POST" enctype="multipart/form-data" class="form-attachment">
                                                         @csrf
                                                         <input type="file" name="attachment" class="border rounded p-2 text-sm mb-4" required>
@@ -59,8 +57,8 @@
                                                             Upload
                                                         </button>
                                                     </form>
+                                                </td>
                                                 @endif
-                                            </td>
                                         @endif
                                     </tr>
                                 @empty

@@ -30,8 +30,8 @@
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $distribution['total_quantity'] }}</td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="{{ count($budgets) + 2 }}" class="text-center text-sm text-gray-500">Tidak ada distribusi obat untuk order ini.</td>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="text-red-800 text-center p-6" colspan="{{ count($budgets) + 2 }}">Pemberian obat belum dilakukan.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

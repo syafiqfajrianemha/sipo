@@ -56,10 +56,14 @@
                                             <td class="px-6 py-4 text-sm text-gray-700">{{ $budget->budget->name }}</td>
                                             <td class="px-6 py-4 text-sm text-gray-700">{{ $budget->stock }}</td>
                                             <td class="px-6 py-4 text-sm text-gray-700">
-                                                <x-text-input name="budgets[{{ $budget->id }}]" type="number" min="0" class="w-full" />
+                                                <x-text-input name="budgets[{{ $budget->budget->id }}]" type="number" min="0" class="w-full budget-input" data-id="{{ $budget->budget->id }}" />
                                             </td>
                                         </tr>
                                     @endforeach
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="px-6 py-4 text-sm font-bold text-black-500" colspan="2">Jumlah</td>
+                                        <td class="px-6 py-4 text-sm font-bold text-black-500" id="total-amount">0</td>
+                                    </tr>
                                 </tbody>
                             </table>
 
@@ -77,5 +81,23 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="{{ asset('js/main.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const inputs = document.querySelectorAll('.budget-input');
+                const totalAmountCell = document.getElementById('total-amount');
+
+                function calculateTotal() {
+                    let total = 0;
+                    inputs.forEach(input => {
+                        total += parseInt(input.value) || 0;
+                    });
+                    totalAmountCell.textContent = total;
+                }
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', calculateTotal);
+                });
+            });
+        </script>
     @endpush
 </x-app-layout>

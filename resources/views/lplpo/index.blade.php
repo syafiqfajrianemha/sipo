@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Data LPLPO {{ Auth::user()->unit->name }}
+            Data LPLPO {{ Auth::user()->unit->name ?? '' }}
         </h2>
     </x-slot>
 
@@ -17,6 +17,9 @@
                                 <tr class="w-full bg-gray-100 border-b">
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">No</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tanggal Input</th>
+                                    @if (Auth::user()->role === 'petugas-farmasi' || Auth::user()->role === 'admin')
+                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Unit Pelaksana Kesehatan</th>
+                                    @endif
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Pelaporan</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Permintaan</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Aksi</th>
@@ -27,20 +30,23 @@
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->input_date }}</td>
+                                        @if (Auth::user()->role === 'petugas-farmasi' || Auth::user()->role === 'admin')
+                                        <td class="px-6 py-4 text-sm text-gray-700">{{ $order->unit_name }}</td>
+                                        @endif
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->report_month }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->request_month }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">
-                                            <x-primary-href :href="route('lplpo.index')">
+                                            <x-primary-href :href="route('order.show', $order->id)">
                                                 {{ __('Detail') }}
                                             </x-primary-href>
-                                            <x-primary-href :href="route('lplpo.index')">
+                                            <x-primary-href :href="route('lplpo.pdf', $order->id)" target="_blank">
                                                 {{ __('Cetak') }}
                                             </x-primary-href>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr class="border-b hover:bg-gray-50">
-                                        <td class="text-red-800 text-center p-6" colspan="8">Belum Ada Pesanan Satupun.</td>
+                                        <td class="text-red-800 text-center p-6" colspan="5">Belum Ada LPLPO Satupun.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -15,21 +15,30 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::whereIn('status', ['unverified', 'verified'])->get();
+        $user = auth()->user();
+        if ($user->role === 'petugas-puskesmas') {
+            $orders = Order::whereIn('status', ['unverified', 'verified'])->where('user_id', $user->id)->get();
+        } else {
+            $orders = Order::whereIn('status', ['unverified', 'verified'])->get();
+        }
 
         return view('order.index', compact('orders'));
     }
 
     public function create()
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $unitName = $user->unit ? $user->unit->name : 'Unit tidak ditemukan';
 
         $currentDate = now()->format('Y-m-d');
 
         $drugs = Drug::all();
 
-        $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
+        if ($user->role === 'petugas-puskesmas') {
+            $completedOrders = Order::where('status', 'done')->where('user_id', $user->id)->with('orderItems')->get();
+        } else {
+            $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
+        }
 
         return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders'));
     }
@@ -83,7 +92,12 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with('orderItems.drug')->findOrFail($id);
+        $user = auth()->user();
+        if ($user->role === 'petugas-puskesmas') {
+            $order = Order::where('user_id', $user->id)->with('orderItems.drug')->findOrFail($id);
+        } else {
+            $order = Order::with('orderItems.drug')->findOrFail($id);
+        }
 
         foreach ($order->orderItems as $orderItem) {
             $drugDistributionExists = DrugDistribution::where('order_item_id', $orderItem->id)->exists();
@@ -126,12 +140,17 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('order.show', $orderItem->id)->with('message', 'Pemberian obat berhasil!');
+        return redirect()->route('order.show', $order->id)->with('message', 'Pemberian obat berhasil!');
     }
 
     public function giveList($orderId)
     {
-        $order = Order::with(['drugDistributions.orderItem.drug', 'drugDistributions.budget'])->findOrFail($orderId);
+        $user = auth()->user();
+        if ($user->role === 'petugas-puskesmas') {
+            $order = Order::where('user_id', $user->id)->with(['drugDistributions.orderItem.drug', 'drugDistributions.budget'])->findOrFail($orderId);
+        } else {
+            $order = Order::with(['drugDistributions.orderItem.drug', 'drugDistributions.budget'])->findOrFail($orderId);
+        }
 
         // Dapatkan semua nama budget yang unik
         $budgets = $order->drugDistributions->pluck('budget.name')->unique();

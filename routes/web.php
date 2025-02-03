@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DrugController;
 use App\Http\Controllers\LplpoController;
 use App\Http\Controllers\OrderController;
@@ -12,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard', 301);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/get-drug/{id}', function ($id) {
@@ -56,7 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/give-drug/{itemId}', [OrderController::class, 'storeDrugGiving'])->middleware(RoleCheck::class.':admin,petugas-farmasi')->name('drug.give.store');
     Route::get('/give-drug/list/{orderId}', [OrderController::class, 'giveList'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('give.list');
 
-    Route::get('/lplpo', [LplpoController::class, 'index'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('lplpo.index');
+    Route::get('/lplpo', [LplpoController::class, 'index'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('lplpo.index');
+    Route::get('/lplpo/{id}/pdf', [LplpoController::class, 'generatePdf'])->name('lplpo.pdf');
 });
 
 require __DIR__.'/auth.php';

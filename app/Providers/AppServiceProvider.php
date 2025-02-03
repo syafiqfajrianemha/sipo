@@ -29,24 +29,28 @@ class AppServiceProvider extends ServiceProvider
             return in_array($user->role, ['admin']);
         });
 
-        Gate::define('access-admin-puskesmas-farmasi', function ($user) {
-            return in_array($user->role, ['admin', 'petugas-puskesmas', 'petugas-farmasi']);
+        Gate::define('access-petugas-farmasi', function ($user) {
+            return in_array($user->role, ['petugas-farmasi']);
         });
 
-        Gate::define('access-admin-puskesmas', function ($user) {
-            return in_array($user->role, ['admin', 'petugas-puskesmas']);
+        Gate::define('access-petugas-puskesmas', function ($user) {
+            return in_array($user->role, ['petugas-puskesmas']);
         });
 
         Gate::define('access-admin-farmasi', function ($user) {
             return in_array($user->role, ['admin', 'petugas-farmasi']);
         });
 
-        Gate::define('access-petugas-puskesmas-farmasi', function ($user) {
-            return in_array($user->role, ['petugas-puskesmas', 'petugas-farmasi']);
+        Gate::define('access-admin-puskesmas', function ($user) {
+            return in_array($user->role, ['admin', 'petugas-puskesmas']);
         });
 
-        Gate::define('access-petugas-farmasi', function ($user) {
-            return in_array($user->role, ['petugas-farmasi']);
+        Gate::define('access-admin-farmasi-puskesmas', function ($user) {
+            return in_array($user->role, ['admin', 'petugas-farmasi', 'petugas-puskesmas']);
+        });
+
+        Gate::define('access-farmasi-puskesmas', function ($user) {
+            return in_array($user->role, ['petugas-farmasi', 'petugas-puskesmas']);
         });
     }
 }
