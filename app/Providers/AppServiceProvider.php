@@ -41,8 +41,8 @@ class AppServiceProvider extends ServiceProvider
             return in_array($user->role, ['admin', 'petugas-farmasi']);
         });
 
-        Gate::define('access-petugas-puskesmas', function ($user) {
-            return in_array($user->role, ['petugas-puskesmas']);
+        Gate::define('access-petugas-puskesmas-farmasi', function ($user) {
+            return in_array($user->role, ['petugas-puskesmas', 'petugas-farmasi']);
         });
 
         Gate::define('access-petugas-farmasi', function ($user) {

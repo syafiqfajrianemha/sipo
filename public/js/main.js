@@ -26,3 +26,35 @@ $('.form-delete').on('click', function (e) {
         }
     })
 });
+
+// form attachment
+$('.form-attachment button[type="submit"]').on('click', function (e) {
+    e.preventDefault();
+
+    const form = $(this).closest('form');
+    const fileInput = form.find('input[type="file"]')[0];
+
+    if (!fileInput.files.length) {
+        Swal.fire({
+            icon: 'error',
+            title: 'File tidak ditemukan!',
+            text: 'Silakan pilih file sebelum mengunggah.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Upload Bukti Pengiriman?',
+        text: 'Pastikan file yang diunggah sudah benar.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Upload',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        }
+    });
+});

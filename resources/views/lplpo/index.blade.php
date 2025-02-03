@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Pesanan') }}
+            Data LPLPO {{ Auth::user()->unit->name }}
         </h2>
     </x-slot>
 
@@ -11,24 +11,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    @if (Auth::user()->role === 'petugas-puskesmas')
-                        <x-primary-href :href="route('order.create')" class="mb-3">
-                            {{ __('Tambah Pesanan') }}
-                        </x-primary-href>
-                    @endif
-
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200">
                             <thead>
                                 <tr class="w-full bg-gray-100 border-b">
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">No</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Nomor Dokumen</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Tanggal Input</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Pelaporan</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Bulan Permintaan</th>
-                                    @if (Auth::user()->role === 'petugas-puskesmas')
-                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Status</th>
-                                    @endif
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Aksi</th>
                                 </tr>
                             </thead>
@@ -37,31 +27,16 @@
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->input_date }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">{{ $order->document_number }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->report_month }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $order->request_month }}</td>
-                                        @if (Auth::user()->role === 'petugas-puskesmas')
-                                            <td class="px-6 py-4 text-sm text-gray-700">{{ $order->status === 'unverified' ? 'Belum Diverifikasi' : 'Sudah Diverifikasi' }}</td>
-                                        @endif
                                         <td class="px-6 py-4 text-sm text-gray-700">
-                                            <x-primary-href :href="route('order.show', $order->id)">
+                                            <x-primary-href :href="route('lplpo.index')">
                                                 {{ __('Detail') }}
                                             </x-primary-href>
+                                            <x-primary-href :href="route('lplpo.index')">
+                                                {{ __('Cetak') }}
+                                            </x-primary-href>
                                         </td>
-                                        @if (Auth::user()->role === 'petugas-farmasi')
-                                            <td class="px-6 py-4 text-sm text-gray-700">
-                                                @if ($order->status === 'verified')
-                                                    <form action="{{ route('order.uploadAttachment', $order->id) }}" method="POST" enctype="multipart/form-data" class="form-attachment">
-                                                        @csrf
-                                                        <input type="file" name="attachment" class="border rounded p-2 text-sm mb-4" required>
-
-                                                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                                                            Upload
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </td>
-                                        @endif
                                     </tr>
                                 @empty
                                     <tr class="border-b hover:bg-gray-50">

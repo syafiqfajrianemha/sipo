@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DrugController;
+use App\Http\Controllers\LplpoController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UnitController;
@@ -9,9 +10,7 @@ use App\Http\Middleware\RoleCheck;
 use App\Models\Drug;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/dashboard', 301);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -45,9 +44,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/obat/{id}', [DrugController::class, 'update'])->middleware(RoleCheck::class.':admin')->name('obat.update');
     Route::delete('/obat/{id}', [DrugController::class, 'destroy'])->middleware(RoleCheck::class.':admin')->name('obat.destroy');
 
-    Route::get('/order', [OrderController::class, 'index'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.index');
+    Route::get('/order', [OrderController::class, 'index'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('order.index');
     Route::post('/order', [OrderController::class, 'store'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.store');
     Route::get('/order/create', [OrderController::class, 'create'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.create');
+    Route::get('/order/{id}', [OrderController::class, 'show'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('order.show');
+    Route::patch('/order/{id}/done', [OrderController::class, 'updateDone'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.update.done');
+
+    Route::post('/order/{orderId}/upload-attachment', [OrderController::class, 'uploadAttachment'])->name('order.uploadAttachment');
+
+    Route::get('/give-drug/{itemId}', [OrderController::class, 'giveDrug'])->middleware(RoleCheck::class.':admin,petugas-farmasi')->name('give.drug');
+    Route::post('/give-drug/{itemId}', [OrderController::class, 'storeDrugGiving'])->middleware(RoleCheck::class.':admin,petugas-farmasi')->name('drug.give.store');
+    Route::get('/give-drug/list/{orderId}', [OrderController::class, 'giveList'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('give.list');
+
+    Route::get('/lplpo', [LplpoController::class, 'index'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('lplpo.index');
 });
 
 require __DIR__.'/auth.php';

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
 use App\Models\Drug;
+use App\Models\DrugBudget;
+use App\Models\DrugDistribution;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -10,18 +13,13 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $orders = Order::all();
+        $orders = Order::whereIn('status', ['unverified', 'verified'])->get();
+
         return view('order.index', compact('orders'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $user = Auth::user();
@@ -31,12 +29,11 @@ class OrderController extends Controller
 
         $drugs = Drug::all();
 
-        return view('order.create', compact('unitName', 'currentDate', 'drugs'));
+        $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
+
+        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         // $request->validate([
@@ -84,35 +81,115 @@ class OrderController extends Controller
         return redirect(route('order.index', absolute: false))->with('message', 'Pesanan Berhasil di Tambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
+    public function show($id)
     {
-        //
+        $order = Order::with('orderItems.drug')->findOrFail($id);
+
+        foreach ($order->orderItems as $orderItem) {
+            $drugDistributionExists = DrugDistribution::where('order_item_id', $orderItem->id)->exists();
+            $orderItem->drug_distribution_exists = $drugDistributionExists;
+        }
+
+        $attachment = Attachment::where('order_id', $id)->first();
+
+        return view('order.show', compact('order', 'attachment'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
+    public function giveDrug($itemId)
     {
-        //
+        $orderItem = OrderItem::findOrFail($itemId);
+
+        $budgets = DrugBudget::with('budget')->where('drug_id', $orderItem->drug_id)->get();
+
+        return view('give.index', compact('orderItem', 'budgets'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
+    public function storeDrugGiving(Request $request, $itemId)
     {
-        //
+        $orderItem = OrderItem::findOrFail($itemId);
+
+        $order = $orderItem->order;
+        $order->status = 'verified';
+        $order->save();
+
+        foreach ($request->input('budgets') as $budgetId => $quantity) {
+            if ($quantity > 0) {
+                $drugBudget = DrugBudget::find($budgetId);
+                $drugBudget->stock -= $quantity;
+                $drugBudget->save();
+
+                DrugDistribution::create([
+                    'order_item_id' => $orderItem->id,
+                    'budget_id' => $budgetId,
+                    'quantity' => $quantity,
+                ]);
+            }
+        }
+
+        return redirect()->route('order.show', $orderItem->id)->with('message', 'Pemberian obat berhasil!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
+    public function giveList($orderId)
     {
-        //
+        $order = Order::with(['drugDistributions.orderItem.drug', 'drugDistributions.budget'])->findOrFail($orderId);
+
+        // Dapatkan semua nama budget yang unik
+        $budgets = $order->drugDistributions->pluck('budget.name')->unique();
+
+        // Kelompokkan data berdasarkan nama obat
+        $groupedDistributions = $order->drugDistributions
+            ->groupBy(function ($distribution) {
+                return $distribution->orderItem->drug->name;
+            })
+            ->map(function ($group) use ($budgets) {
+                $budgetQuantities = [];
+
+                // Inisialisasi semua budget dengan 0
+                foreach ($budgets as $budget) {
+                    $budgetQuantities[$budget] = 0;
+                }
+
+                // Hitung quantity per budget
+                foreach ($group as $distribution) {
+                    $budgetName = $distribution->budget->name;
+                    $budgetQuantities[$budgetName] += $distribution->quantity;
+                }
+
+                return [
+                    'drug_name' => $group->first()->orderItem->drug->name,
+                    'budgets' => $budgetQuantities,
+                    'total_quantity' => array_sum($budgetQuantities),
+                ];
+            });
+
+        return view('give.list', compact('order', 'groupedDistributions', 'budgets'));
+    }
+
+    public function uploadAttachment(Request $request, $orderId)
+    {
+        $request->validate([
+            'attachment' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
+        ]);
+
+        $order = Order::findOrFail($orderId);
+
+        $filePath = $request->file('attachment')->store('attachments', 'public');
+
+        $order->attachments()->create([
+            'file_path' => $filePath
+        ]);
+
+        return redirect()->back()->with('success', 'Bukti berhasil di-upload.');
+    }
+
+    public function updateDone($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->update([
+            'status' => 'done'
+        ]);
+
+        return redirect(route('lplpo.index', absolute: false))->with('message', 'Pesanan Telah Selesai');
     }
 }

@@ -17,7 +17,7 @@
                     </x-nav-link>
                 </div>
 
-                @can('access-petugas-puskesmas')
+                @can('access-petugas-puskesmas-farmasi')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('order.index')" :active="request()->routeIs('order.index')">
                             {{ __('Pesanan') }}
@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        <x-nav-link :href="route('lplpo.index')" :active="request()->routeIs('lplpo.index')">
                             {{ __('LPLPO') }}
                         </x-nav-link>
                     </div>
