@@ -58,3 +58,21 @@ $('.form-attachment button[type="submit"]').on('click', function (e) {
         }
     });
 });
+
+// button diterima
+$('.form-diterima').on('click', function (e) {
+    e.preventDefault();
+
+    Swal.fire({
+        title: 'Apakah Anda Sudah Menerimanya?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Sudah'
+    }).then((result) => {
+        if (result.value) {
+            return $(this).submit();
+        }
+    })
+});

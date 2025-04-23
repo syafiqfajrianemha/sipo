@@ -42,9 +42,16 @@
                                             <td class="px-6 py-4 text-sm text-gray-700">{{ $order->status === 'unverified' ? 'Belum Diverifikasi' : 'Sudah Diverifikasi' }}</td>
                                         @endif
                                         <td class="px-6 py-4 text-sm text-gray-700">
-                                            <x-primary-href :href="route('order.show', $order->id)">
+                                            <x-primary-href :href="route('order.show', $order->id)" class="mb-2">
                                                 {{ __('Detail') }}
                                             </x-primary-href>
+                                            @if (Auth::user()->role === 'petugas-puskesmas' && $order->status === 'unverified')
+                                                <form action="{{ route('order.delete', $order->id) }}" method="POST" class="form-delete">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 cursor-pointer">Hapus</button>
+                                                </form>
+                                            @endif
                                         </td>
                                         @if (Auth::user()->role === 'petugas-farmasi')
                                                 @if ($order->status === 'verified')

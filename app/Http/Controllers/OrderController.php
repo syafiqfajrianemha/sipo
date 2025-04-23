@@ -45,23 +45,23 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'document_number' => 'required|string|max:255',
-        //     'unit_name' => 'required|string|max:255',
-        //     'report_month' => 'required|string|max:255',
-        //     'request_month' => 'required|string|max:255',
-        //     'input_date' => 'required|date',
-        //     'items' => 'required|array',
-        //     'items.*.drug_id' => 'required',
-        //     'items.*.unit' => 'required|string|max:255',
-        //     'items.*.initial_stock' => 'required|integer|min:0',
-        //     'items.*.acceptance' => 'required|integer|min:0',
-        //     'items.*.inventory' => 'required|integer|min:0',
-        //     'items.*.usage' => 'required|integer|min:0',
-        //     'items.*.remaining_stock' => 'required|integer|min:0',
-        //     'items.*.optimum_stock' => 'required|integer|min:0',
-        //     'items.*.request_quantity' => 'required|integer|min:0',
-        // ]);
+        $request->validate([
+            'document_number' => 'required|string|max:255',
+            'unit_name' => 'required|string|max:255',
+            'report_month' => 'required|string|max:255',
+            'request_month' => 'required|string|max:255',
+            'input_date' => 'required|date',
+            // 'items' => 'required|array',
+            // 'items.*.drug_id' => 'required',
+            // 'items.*.unit' => 'required|string|max:255',
+            // 'items.*.initial_stock' => 'required|integer|min:0',
+            // 'items.*.acceptance' => 'required|integer|min:0',
+            // 'items.*.inventory' => 'required|integer|min:0',
+            // 'items.*.usage' => 'required|integer|min:0',
+            // 'items.*.remaining_stock' => 'required|integer|min:0',
+            // 'items.*.optimum_stock' => 'required|integer|min:0',
+            // 'items.*.request_quantity' => 'required|integer|min:0',
+        ]);
 
         $order = Order::create([
             'document_number' => $request->document_number,
@@ -210,5 +210,12 @@ class OrderController extends Controller
         ]);
 
         return redirect(route('lplpo.index', absolute: false))->with('message', 'Pesanan Telah Selesai');
+    }
+
+    public function delete($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
+        return redirect(route('order.index', absolute: false))->with('message', 'Pesanan Berhasil di Hapus');
     }
 }

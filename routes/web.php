@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/create', [OrderController::class, 'create'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.create');
     Route::get('/order/{id}', [OrderController::class, 'show'])->middleware(RoleCheck::class.':admin,petugas-puskesmas,petugas-farmasi')->name('order.show');
     Route::patch('/order/{id}/done', [OrderController::class, 'updateDone'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.update.done');
+    Route::delete('/order/delete/{id}', [OrderController::class, 'delete'])->middleware(RoleCheck::class.':admin,petugas-puskesmas')->name('order.delete');
 
     Route::post('/order/{orderId}/upload-attachment', [OrderController::class, 'uploadAttachment'])->name('order.uploadAttachment');
 

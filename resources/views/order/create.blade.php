@@ -81,7 +81,6 @@
                                         <div class="flex-1">
                                             <x-input-label for="drug_id[]" :value="__('Nama Obat*')" />
                                             <select id="drug_id[]" name="items[][drug_id]" class="block mt-1 w-full drug-select" required>
-                                                <option value="" disabled selected>Pilih Obat</option>
                                                 @foreach ($drugs as $drug)
                                                     <option value="{{ $drug->id }}" @if ($item->drug_id == $drug->id) selected @endif>{{ $drug->name }}</option>
                                                 @endforeach
@@ -91,22 +90,22 @@
 
                                         <div class="flex-1">
                                             <x-input-label for="unit[]" :value="__('Satuan')" />
-                                            <x-text-input id="unit[]" name="items[][unit]" type="text" class="mt-1 block w-full" value="{{ $item->unit }}" readonly />
+                                            <x-text-input id="unit[]" name="items[][unit]" type="text" class="mt-1 block w-full" value="{{ $item->unit }}" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="initial_stock[]" :value="__('Stok Awal')" />
-                                            <x-text-input id="initial_stock[]" name="items[][initial_stock]" type="number" class="mt-1 block w-full" value="{{ $item->initial_stock }}" readonly />
+                                            <x-text-input id="initial_stock[]" name="items[][initial_stock]" type="number" class="mt-1 block w-full" value="{{ $item->initial_stock }}" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="acceptance[]" :value="__('Penerimaan')" />
-                                            <x-text-input id="acceptance[]" name="items[][acceptance]" type="number" class="mt-1 block w-full" value="{{ $item->acceptance }}" readonly />
+                                            <x-text-input id="acceptance[]" name="items[][acceptance]" type="number" class="mt-1 block w-full" value="{{ $item->acceptance }}" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="inventory[]" :value="__('Persediaan')" />
-                                            <x-text-input id="inventory-{{ $item->id }}" name="items[][inventory]" type="number" class="mt-1 block w-full" value="{{ $item->inventory }}" readonly />
+                                            <x-text-input id="inventory-{{ $item->id }}" name="items[][inventory]" type="number" class="mt-1 block w-full" value="{{ $item->inventory }}" />
                                         </div>
 
                                         <div class="flex-1">
@@ -116,17 +115,17 @@
 
                                         <div class="flex-1">
                                             <x-input-label for="remaining_stock[]" :value="__('Sisa Stok')" />
-                                            <x-text-input id="remaining_stock-{{ $item->id }}" name="items[][remaining_stock]" type="number" class="mt-1 block w-full remaining-stock" readonly />
+                                            <x-text-input id="remaining_stock-{{ $item->id }}" name="items[][remaining_stock]" type="number" class="mt-1 block w-full remaining-stock" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="optimum_stock[]" :value="__('Stok Optimum')" />
-                                            <x-text-input id="optimum_stock-{{ $item->id }}" name="items[][optimum_stock]" type="number" class="mt-1 block w-full optimum-stock" readonly />
+                                            <x-text-input id="optimum_stock-{{ $item->id }}" name="items[][optimum_stock]" type="number" class="mt-1 block w-full optimum-stock" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="permintaan[]" :value="__('Permintaan*')" />
-                                            <x-text-input id="permintaan-{{ $item->id }}" name="items[][request_quantity]" type="number" class="mt-1 block w-full request-quantity" readonly />
+                                            <x-text-input id="permintaan-{{ $item->id }}" name="items[][request_quantity]" type="number" class="mt-1 block w-full request-quantity" />
                                         </div>
 
                                         <button type="button" class="remove-drug-row text-red-500">Hapus</button>
