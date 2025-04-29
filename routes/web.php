@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardExportController;
 use App\Http\Controllers\DrugController;
 use App\Http\Controllers\LplpoController;
 use App\Http\Controllers\OrderController;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard', 301);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard/export/excel', [DashboardExportController::class, 'exportExcel'])->name('dashboard.export.excel');
+Route::get('/dashboard/export/pdf', [DashboardExportController::class, 'exportPDF'])->name('dashboard.export.pdf');
 
 Route::middleware('auth')->group(function () {
     Route::get('/get-drug/{id}', function ($id) {
