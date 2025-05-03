@@ -41,8 +41,10 @@ class DashboardController extends Controller
             ->select('drugs.name as drug_name', 'budgets.name as budget_name', 'drug_budgets.stock')
             ->get();
 
+        $units = Unit::all();
+
         if ($user->role === 'admin') {
-            return view('dashboard', compact('totalUnit', 'totalLplpoSelesai', 'totalObat', 'totalAnggaran', 'totalLplpoBelumSelesai', 'totalUser', 'rekap', 'obatKosong'));
+            return view('dashboard', compact('totalUnit', 'totalLplpoSelesai', 'totalObat', 'totalAnggaran', 'totalLplpoBelumSelesai', 'totalUser', 'rekap', 'obatKosong', 'units'));
         }
 
         if ($user->role === 'petugas-farmasi') {

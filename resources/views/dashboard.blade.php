@@ -53,17 +53,51 @@
                             </div>
                         </div>
 
-                        {{-- Grafik Permintaan --}}
-                        <div class="bg-white p-4 rounded shadow my-6">
-                            <h2 class="text-lg font-semibold mb-2">Grafik Permintaan Obat per Bulan</h2>
-                            <canvas id="rekapChart" height="120"></canvas>
+                        <div class="flex gap-2 my-6">
+                            {{-- <a href="{{ route('dashboard.export.excel', request()->query()) }}"
+                               class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" target="_blank">Export Excel</a> --}}
+                            {{-- <a href="{{ route('dashboard.export.pdf', request()->query()) }}"
+                               class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700" target="_blank">Export PDF</a> --}}
+                            <form method="GET" action="{{ route('dashboard.export.pdf') }}" target="_blank" class="bg-white p-4 rounded shadow-md mb-6">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                                    <div>
+                                        <label for="mode" class="block text-sm font-medium text-gray-700 mb-1">Mode Rekap</label>
+                                        <select name="mode" id="mode" class="border rounded px-3 py-2 w-full">
+                                            <option value="month" {{ request('mode') == 'month' ? 'selected' : '' }}>Rekap Bulanan</option>
+                                            <option value="year" {{ request('mode') == 'year' ? 'selected' : '' }}>Rekap Tahunan</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                                        <input type="number" name="year" id="year" placeholder="Tahun" value="{{ request('year') }}" class="border rounded px-3 py-2 w-full" min="0">
+                                    </div>
+
+                                    <div>
+                                        <label for="unit" class="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                                        <select name="unit" id="unit" class="border rounded px-3 py-2 w-full">
+                                            <option value="" disabled selected>Pilih Unit</option>
+                                            @foreach ($units as $unit)
+                                                <option value="{{ $unit->name }}">{{ $unit->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input type="text" name="unit" id="unit" placeholder="Unit" value="{{ request('unit') }}" class="border rounded px-3 py-2 w-full"> --}}
+                                    </div>
+
+                                    <label for="unit" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                                    <div class="flex items-end">
+                                        <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                            Export PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
-                        <div class="flex gap-2 mb-6">
-                            <a href="{{ route('dashboard.export.excel', request()->query()) }}"
-                               class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" target="_blank">Export Excel</a>
-                            <a href="{{ route('dashboard.export.pdf', request()->query()) }}"
-                               class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700" target="_blank">Export PDF</a>
+                        {{-- Grafik Permintaan --}}
+                        <div class="bg-white p-4 rounded shadow mb-6">
+                            <h2 class="text-lg font-semibold mb-2">Grafik Permintaan Obat per Bulan</h2>
+                            <canvas id="rekapChart" height="120"></canvas>
                         </div>
 
                         {{-- Obat Kosong --}}
@@ -158,6 +192,7 @@
     </div>
     @push('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @can('access-admin')
     <script>
         const rawData = @json($rekap);
 
@@ -193,5 +228,6 @@
             }
         });
     </script>
+    @endcan
     @endpush
 </x-app-layout>

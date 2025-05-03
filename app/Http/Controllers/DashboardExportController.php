@@ -20,15 +20,23 @@ class DashboardExportController extends Controller
         $rekap = DB::table('order_items')
             ->join('orders', 'order_items.order_id', '=', 'orders.id')
             ->join('drugs', 'order_items.drug_id', '=', 'drugs.id')
-            ->selectRaw('YEAR(orders.input_date) as year, MONTH(orders.input_date) as month, drugs.name as drug_name, SUM(order_items.request_quantity) as total')
+            ->selectRaw('YEAR(orders.input_date) as year' .
+                        ($request->mode == 'month' ? ', MONTH(orders.input_date) as month' : '') .
+                        ', drugs.name as drug_name, SUM(order_items.request_quantity) as total')
             ->when($request->year, fn($q) => $q->whereYear('orders.input_date', $request->year))
             ->when($request->unit, fn($q) => $q->where('orders.unit_name', $request->unit))
-            ->groupBy('year', 'month', 'drug_name')
-            ->orderBy('year')->orderBy('month')
+            ->when($request->mode == 'month', function ($q) {
+                $q->groupBy('year', 'month', 'drug_name')
+                ->orderBy('year')
+                ->orderBy('month');
+            }, function ($q) {
+                $q->groupBy('year', 'drug_name')
+                ->orderBy('year');
+            })
             ->get();
 
         $pdf = PDF::loadView('exports.rekap-pdf', compact('rekap'))->setPaper('a4', 'portrait');
-        return $pdf->download('rekap-permintaan-obat.pdf');
+        return $pdf->stream('rekap-permintaan-obat.pdf');
     }
 }
 
