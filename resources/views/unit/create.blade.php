@@ -18,6 +18,7 @@
                                 <option selected disabled>Pilih Kategori Unit</option>
                                 <option value="puskesmas">Puskesmas</option>
                                 <option value="kantor-pusat">Kantor Pusat</option>
+                                <option value="rumah-sakit">Rumah Sakit</option>
                             </x-select-option>
                             <x-input-error :messages="$errors->get('category')" class="mt-2" />
                         </div>

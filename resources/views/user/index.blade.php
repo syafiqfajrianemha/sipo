@@ -33,7 +33,13 @@
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $user->name }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $user->email }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">{{ $user->role }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            @if ($user->role === 'petugas-puskesmas')
+                                                petugas-pelayanan-kesehatan
+                                            @else
+                                                {{ $user->role }}
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-700">{{ $user->unit_id !== null ? $user->unit->name : '-' }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-700">
                                             <x-primary-href :href="route('user.edit', $user->id)" class="mb-2">

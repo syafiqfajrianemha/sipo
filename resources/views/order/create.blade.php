@@ -159,7 +159,7 @@
                     document.getElementById(`optimum_stock-${rowId}`).value = Math.ceil(stokOptimum);
 
                     const permintaan = Math.max(0, stokOptimum - sisaStok);
-                    document.getElementById(`permintaan-${rowId}`).value = Math.ceil(permintaan);
+                    document.getElementById(`permintaan-${rowId}`).value = Math.floor(permintaan);
                 });
             });
 

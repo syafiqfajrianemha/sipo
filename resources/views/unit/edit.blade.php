@@ -19,6 +19,7 @@
                                 <option selected disabled>Pilih Kategori Unit</option>
                                 <option value="puskesmas" @if ($unit->category == 'puskesmas') selected @endif>Puskesmas</option>
                                 <option value="kantor-pusat" @if ($unit->category == 'kantor-pusat') selected @endif>Kantor Pusat</option>
+                                <option value="rumah-sakit" @if ($unit->category == 'rumah-sakit') selected @endif>Rumah Sakit</option>
                             </x-select-option>
                             <x-input-error :messages="$errors->get('category')" class="mt-2" />
                         </div>

@@ -21,7 +21,7 @@
             <x-select-option id="role" class="block mt-1 w-full" name="role" required>
                 <option selected disabled>Pilih Role</option>
                 <option value="admin">Admin</option>
-                <option value="petugas-puskesmas">Petugas Puskesmas</option>
+                <option value="petugas-puskesmas">Petugas Pelayanan Kesehatan</option>
                 <option value="petugas-farmasi">Petugas Farmasi</option>
             </x-select-option>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

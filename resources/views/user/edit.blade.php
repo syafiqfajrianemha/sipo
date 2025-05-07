@@ -20,7 +20,7 @@
             <x-select-option id="role" class="block mt-1 w-full" name="role" required>
                 <option selected disabled>Choose Role</option>
                 <option value="admin" @if ($user->role == "admin") selected @endif>Admin</option>
-                <option value="petugas-puskesmas" @if ($user->role == "petugas-puskesmas") selected @endif>Petugas Puskesmas</option>
+                <option value="petugas-puskesmas" @if ($user->role == "petugas-puskesmas") selected @endif>Petugas Pelayanan Kesehatan</option>
                 <option value="petugas-farmasi" @if ($user->role == "petugas-farmasi") selected @endif>Petugas Farmasi</option>
             </x-select-option>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

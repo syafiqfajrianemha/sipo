@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->enum('category', ['puskesmas', 'kantor-pusat']);
+            $table->enum('category', ['puskesmas', 'kantor-pusat', 'rumah-sakit']);
             $table->string('name');
             $table->longText('address');
             $table->string('phone');
