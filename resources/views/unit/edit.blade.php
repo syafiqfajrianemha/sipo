@@ -17,7 +17,7 @@
                             <x-input-label for="category" :value="__('Kategori Unit*')" />
                             <x-select-option id="category" class="block mt-1 w-full" name="category" required>
                                 <option selected disabled>Pilih Kategori Unit</option>
-                                <option value="puskesmas" @if ($unit->category == 'puskesmas') selected @endif>Puskesmas</option>
+                                <option value="puskesmas" @if ($unit->category == 'puskesmas') selected @endif>Unit Pelayanan Kesehatan</option>
                                 <option value="kantor-pusat" @if ($unit->category == 'kantor-pusat') selected @endif>Kantor Pusat</option>
                                 <option value="rumah-sakit" @if ($unit->category == 'rumah-sakit') selected @endif>Rumah Sakit</option>
                             </x-select-option>
