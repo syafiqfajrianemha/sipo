@@ -95,17 +95,17 @@
 
                                         <div class="flex-1">
                                             <x-input-label for="initial_stock[]" :value="__('Stok Awal')" />
-                                            <x-text-input id="initial_stock[]" name="items[][initial_stock]" type="number" class="mt-1 block w-full" value="{{ $item->initial_stock }}" />
+                                            <x-text-input id="initial_stock[]" name="items[][initial_stock]" type="number" class="mt-1 block w-full" value="{{ $item->remaining_stock ? $item->remaining_stock : $item->initial_stock }}" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="acceptance[]" :value="__('Penerimaan')" />
-                                            <x-text-input id="acceptance[]" name="items[][acceptance]" type="number" class="mt-1 block w-full" value="{{ $item->acceptance }}" />
+                                            <x-text-input id="acceptance[]" name="items[][acceptance]" type="number" class="mt-1 block w-full" value="{{ $orderItemQuantities[$item->id] ? $orderItemQuantities[$item->id] : $item->acceptance }}" />
                                         </div>
 
                                         <div class="flex-1">
                                             <x-input-label for="inventory[]" :value="__('Persediaan')" />
-                                            <x-text-input id="inventory-{{ $item->id }}" name="items[][inventory]" type="number" class="mt-1 block w-full" value="{{ $item->inventory }}" />
+                                            <x-text-input id="inventory-{{ $item->id }}" name="items[][inventory]" type="number" class="mt-1 block w-full" value="{{ $item->remaining_stock && $orderItemQuantities[$item->id] ? ($item->remaining_stock + $orderItemQuantities[$item->id]) : $item->inventory }}" />
                                         </div>
 
                                         <div class="flex-1">

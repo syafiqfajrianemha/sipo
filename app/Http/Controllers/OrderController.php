@@ -32,15 +32,25 @@ class OrderController extends Controller
 
         $currentDate = now()->format('Y-m-d');
 
-        $drugs = Drug::all();
+        $latestCreatedAt = Drug::max('created_at');
+        $drugs = Drug::where('created_at', $latestCreatedAt)->get();
 
         if ($user->role === 'petugas-puskesmas') {
-            $completedOrders = Order::where('status', 'done')->where('user_id', $user->id)->with('orderItems')->get();
+            $latestCompletedOrder = Order::max('created_at');
+            $completedOrders = Order::where('status', 'done')->where('user_id', $user->id)->where('created_at', $latestCompletedOrder)->with('orderItems')->get();
+
+            $orderItemQuantities = [];
+            foreach ($completedOrders as $order) {
+                foreach ($order->orderItems as $orderItem) {
+                    $totalQuantity = DrugDistribution::where('order_item_id', $orderItem->id)->sum('quantity');
+                    $orderItemQuantities[$orderItem->id] = $totalQuantity;
+                }
+            }
         } else {
             $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
         }
 
-        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders'));
+        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders', 'orderItemQuantities'));
     }
 
     public function store(Request $request)
