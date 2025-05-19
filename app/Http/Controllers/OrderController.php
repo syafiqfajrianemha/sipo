@@ -34,7 +34,6 @@ class OrderController extends Controller
 
         $latestCreatedAt = Drug::max('created_at');
         $drugs = Drug::where('created_at', $latestCreatedAt)->get();
-        $drugAll = Drug::all();
 
         if ($user->role === 'petugas-puskesmas') {
             $latestCompletedOrder = Order::max('created_at');
@@ -51,7 +50,7 @@ class OrderController extends Controller
             $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
         }
 
-        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders', 'orderItemQuantities', 'drugAll'));
+        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders', 'orderItemQuantities'));
     }
 
     public function store(Request $request)
