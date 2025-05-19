@@ -81,7 +81,7 @@
                                         <div class="flex-1">
                                             <x-input-label for="drug_id[]" :value="__('Nama Obat*')" />
                                             <select id="drug_id[]" name="items[][drug_id]" class="block mt-1 w-full drug-select" required>
-                                                @foreach ($drugs as $drug)
+                                                @foreach ($drugAll as $drug)
                                                     <option value="{{ $drug->id }}" @if ($item->drug_id == $drug->id) selected @endif>{{ $drug->name }}</option>
                                                 @endforeach
                                             </select>
