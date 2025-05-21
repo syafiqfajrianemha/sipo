@@ -49,8 +49,8 @@ class OrderController extends Controller
         } else {
             $completedOrders = Order::where('status', 'done')->with('orderItems')->get();
         }
-
-        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders', 'orderItemQuantities'));
+        $getDrugAlls = Drug::all();
+        return view('order.create', compact('unitName', 'currentDate', 'drugs', 'completedOrders', 'orderItemQuantities', 'getDrugAlls'));
     }
 
     public function store(Request $request)
